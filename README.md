@@ -79,6 +79,23 @@ kubectl get nodes
 NAME | STATUS | ROLES         | AGE | VERSION
 odin   Ready    control-plane   69s   v1.29.2
 thor   Ready    <none>          43s   v1.29.2
+
+Resultado de um deployment e service Jenkins
+kubectl get all
+
+NAME                              | READY  | STATUS   | RESTARTS  | AGE
+pod/jenkins-dp-6fb5fb8cc7-fggpw     1/1      Running    0           118s
+pod/jenkins-dp-6fb5fb8cc7-kqljt     1/1      Running    0           118s
+
+NAME                 | TYPE       | CLUSTER-IP     | EXTERNAL-IP | PORT(S)        | AGE
+service/jenkins-svc    NodePort	    10.103.35.113    <none>        8080:30005/TCP   117s
+service/kubernetes     ClusterIP    10.96.0.1        <none>        443/TCP          2m27s
+
+NAME                        | READY  | UP-TO-DATE | AVAILABLE | AGE
+deployment.apps/jenkins-dp    2/2      2            2           118s
+
+NAME                                   | DESIRED | CURRENT | READY | AGE
+replicaset.apps/jenkins-dp-6fb5fb8cc7    2         2         2       118s
 ```
 
 
