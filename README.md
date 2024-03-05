@@ -75,9 +75,11 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 ```bash
 ### Listar os nodes atualmente no cluster
 kubectl get nodes
+
 NAME | STATUS | ROLES         | AGE | VERSION
 odin   Ready    control-plane   69s   v1.29.2
 thor   Ready    <none>          43s   v1.29.2
+
 
 ### Resultado deve ser um service e deployment do jenkins, usado para testar nosso cluster
 kubectl get all
@@ -96,7 +98,10 @@ deployment.apps/jenkins-dp    2/2      2            2           118s
 NAME                                   | DESIRED | CURRENT | READY | AGE
 replicaset.apps/jenkins-dp-6fb5fb8cc7    2         2         2       118s
 
+
 ### Verificar em quais nodes os pods estão sendo executados
+kubectl get pods -o wide
+
 NAME                         | READY | STATUS   | RESTARTS | AGE   | IP	NODE      | NOMINATED NODE | READINESS | GATES
 jenkins-dp-6fb5fb8cc7-fggpw    1/1     Running    0          3m11s   10.244.192.2   thor             <none>      <none>
 jenkins-dp-6fb5fb8cc7-kqljt    1/1     Running    0          3m11s   10.244.192.1   thor             <none>      <none>
