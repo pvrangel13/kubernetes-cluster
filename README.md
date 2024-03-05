@@ -14,7 +14,7 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 - Odin possui 2 vCPUs e 2GB de memória.
 - Thor e Loki são configurados com 2 vCPUs e 1GB de memória cada.
 
-## Obs.: Não use isso em produção, apenas para estudos! 
+### Obs.: Não use isso em produção, apenas para estudos! 
 
 ## Documentação Oficial de instalação do cluster kubernetes
 
