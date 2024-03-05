@@ -8,8 +8,8 @@ Este repositório serve como uma fonte para aqueles que desejam criar um Cluster
 
 No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), thor e loki (Operários).
 
-Odin possui 2 vCPUs e 2GB de memória.
-Thor e Loki são configurados com 2 vCPUs e 1GB de memória cada.
+- Odin possui 2 vCPUs e 2GB de memória.
+- Thor e Loki são configurados com 2 vCPUs e 1GB de memória cada.
 
 ## Obs.: Não use isso em produção, apenas para estudos! 
 
