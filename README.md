@@ -66,7 +66,7 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 8. **Execução do Playbook Ansible:**
    - Execute o playbook Ansible:
      ```bash
-     ansible-playbook -i /k8s/inventory.ini /k8s/kubernetes_playbook.yaml
+     devops@odin:/home/vagrant$ ansible-playbook -i /k8s/inventory.ini /k8s/kubernetes_playbook.yaml
      ```
 
 9. **Verificando o Funcionamento:**
