@@ -1,0 +1,2 @@
+kubeadm_pod_network_cidr: "10.244.0.0/16"
+kubeadm_apiserver_advertise_address: "192.168.56.110"

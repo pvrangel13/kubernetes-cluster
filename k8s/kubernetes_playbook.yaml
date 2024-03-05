@@ -1,0 +1,193 @@
+---
+- name: Destinado a instalação de um cluster kubernetes
+  hosts: all
+  vars_files:
+    - vars.yaml
+
+  tasks:
+    - name: Encaminhamento de IPv4
+      copy:
+        content: |
+          overlay
+          br_netfilter
+        dest: /etc/modules-load.d/k8s.conf
+      become: true
+    
+    - name: Carregar modulos do k8s.conf
+      shell: sudo modprobe overlay && sudo modprobe br_netfilter
+      become: true
+    
+    - name: Inserir parametros sysctl para k8s
+      copy:
+        content: |
+          net.bridge.bridge-nf-call-iptables  = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.ipv4.ip_forward                 = 1
+        dest: /etc/sysctl.d/k8s.conf
+      become: true
+    
+    - name: Aplicar sysctl sem reboot
+      shell: sudo sysctl --system
+      become: true
+
+    - name: Executar apt update
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Instalar pacotes necessários
+      apt:
+        name:
+          - ca-certificates
+          - curl
+        state: present
+      become: true
+    
+    - name: Permissão
+      shell: install -m 0755 -d /etc/apt/keyrings
+      become: true
+    
+    - name: Fazer o curl para um URL específico
+      shell: "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc"
+      become: true
+    
+    
+    - name: Alterar as permissões do arquivo
+      ansible.builtin.file:
+        path: /etc/apt/keyrings/docker.asc
+        mode: "a+r"
+      become: true
+    
+    - name: Adicionar repo docker ao apt
+      shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      become: true
+    
+    - name: Executar apt update
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Instalar containerd
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - containerd.io
+        - apt-transport-https
+        - ca-certificates
+        - gpg
+      become: true
+
+    - name: Configurar o systemd cgroup driver no /etc/containerd/config.toml
+      copy:
+        content: |
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+            [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+              SystemdCgroup = true
+        dest: /etc/containerd/config.toml
+      become: true
+      
+    # Start - Installing kubeadm, kubelet and kubectl 
+    - name: Restart containerd
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+      become: true
+    
+    - name: Download chave k8s
+      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      become: true
+    
+    - name: Adicionar repositorio apropriado do k8s
+      shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      become: true
+    
+    - name: APT Update
+      apt:
+        update_cache: yes
+      become: true
+    
+    - name: Instalar pacotes necessários
+      apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+      become: true
+
+    - name: Instruir para o sistema não atualizar os pacotes abaixo
+      shell: apt-mark hold kubelet kubeadm kubectl
+      become: true
+    
+    - name: Verificar se o host é o nó mestre
+      set_fact:
+        is_master: "{{ inventory_hostname == 'odin' }}"
+
+    - name: Inicializar o cluster somente no master
+      # command: sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.56.110
+      command: "sudo kubeadm init --pod-network-cidr={{ kubeadm_pod_network_cidr }} --apiserver-advertise-address={{ kubeadm_apiserver_advertise_address }}"
+      register: kubeadm_output
+      ignore_errors: yes
+      when: is_master
+
+    - name: Customizar conforme o kubernetes solicita
+      shell: mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
+      when: is_master
+    
+    - name: Download weaveNet rede dos pods
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/weaveworks/weave/master/prog/weave-kube/weave-daemonset-k8s-1.9.yaml"
+        dest: "/home/devops/weave-net.yaml"
+      when: is_master
+
+    - name: Adicionar linhas antes de INIT_CONTAINER
+      ansible.builtin.lineinfile:
+        path: /home/devops/weave-net.yaml
+        line: "{{ item }}"
+        insertbefore: 'INIT_CONTAINER'
+      loop:
+        - "                - name: IPALLOC_RANGE"
+        #- "                  value: 10.244.0.0/16"
+        - "                  value: {{ kubeadm_pod_network_cidr }}"
+      when: is_master
+    
+
+    - name: Aplicar arquivo de rede dos pods
+      shell: kubectl apply -f /home/devops/weave-net.yaml
+      when: is_master
+    
+    - name: AVerificar nodes no ar
+      shell: kubectl get nodes && kubectl get pods -A
+      when: is_master
+
+    - name: Gerar token e registrar sua saída
+      command: sudo kubeadm token create --print-join-command
+      register: join_command
+      when: is_master
+
+    - name: Copiar a saída do comando para um arquivo
+      local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="/tmp/join-command"
+      when: is_master
+
+#################################################################
+# Unindo os workers no master
+- hosts: workers
+  become: yes
+
+  tasks:
+    - name: Copiar o arquivo de joind para outro servidor
+      copy: src=/tmp/join-command dest=/tmp/join-command.sh mode=0777
+
+    - name: Executar o comando join no servidor remoto
+      command: sudo sh /tmp/join-command.sh
+
+#################################################################
+# Implementação de um deployment e service para teste
+- hosts: master
+
+  tasks:
+    - name: Implementação de um Deployment
+      command: kubectl apply -f /k8s/firstdeploy/jenkins-dp.yaml
+    
+    - name: Implementação de um Service
+      command: kubectl apply -f /k8s/firstdeploy/jenkins-svc.yaml
