@@ -87,7 +87,7 @@ Em construção...
       thor   Ready    <none>          43s   v1.29.2
 
 
-      - Resultado deve ser um service e deployment do jenkins, usado para testar nosso cluster
+      - Resultado deve ser um service e deployment jenkins, usado para testar nosso cluster
       kubectl get all
 
       NAME                              | READY  | STATUS   | RESTARTS  | AGE
