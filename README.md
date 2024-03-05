@@ -1,3 +1,5 @@
+![Alt Text](./k8s.png)
+
 # kubernetes-cluster
 
 Reconhecendo a considerável demanda de tempo associada à configuração manual de laboratórios para estudos, incluindo a instalação de máquinas virtuais Ubuntu e o subsequente processo manual de instalação do cluster, optei por automatizar essas etapas. Utilizando o Vagrant para o provisionamento das máquinas e o Ansible para orquestrar a instalação do cluster, busquei simplificar e agilizar esse processo.
