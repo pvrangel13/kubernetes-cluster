@@ -77,7 +77,7 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 ```bash
 kubectl get nodes
 NAME	STATUS ROLES	        AGE	 VERSION
-odin	Ready	 control-plane	  69s	 v1.29.2
+odin	Ready	 control-plane	 69s	 v1.29.2
 thor	Ready	 <none>	        43s	 v1.29.2
 ```
 
