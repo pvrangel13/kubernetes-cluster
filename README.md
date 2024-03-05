@@ -16,6 +16,8 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 
 ### Obs.: Não use isso em produção, apenas para estudos! 
 
+
+
 ## Documentação Oficial de instalação do cluster kubernetes
 
 [Documentação Oficial Instalação Kubernetes](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
