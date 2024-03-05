@@ -71,16 +71,15 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 
 9. **Verificando o Funcionamento:**
    - Após a conclusão do playbook, execute os comandos abaixo para verificar o funcionamento do Cluster Kubernetes:
-   
-### Listar os nodes atualmente no cluster
 
 ```bash
+### Listar os nodes atualmente no cluster
 kubectl get nodes
 NAME | STATUS | ROLES         | AGE | VERSION
 odin   Ready    control-plane   69s   v1.29.2
 thor   Ready    <none>          43s   v1.29.2
 
-Resultado de um deployment e service Jenkins
+### Resultado deve ser um service e deployment do jenkins, usado para testar nosso cluster
 kubectl get all
 
 NAME                              | READY  | STATUS   | RESTARTS  | AGE
