@@ -15,7 +15,7 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 - Thor e Loki são configurados com 2 vCPUs e 1GB de memória cada.
   
 ```
-### Obs.: Não use isso em produção, apenas para estudos! 
+* Obs.: Não use isso em produção, apenas para estudos! 
 ```
 
 
@@ -79,7 +79,7 @@ Em construção...
    - Após a conclusão do playbook, execute os comandos abaixo para verificar o funcionamento do Cluster Kubernetes:
 
       ```bash
-      ### Listar os nodes atualmente no cluster
+      - Listar os nodes atualmente no cluster
       kubectl get nodes
 
       NAME | STATUS | ROLES         | AGE | VERSION
@@ -87,7 +87,7 @@ Em construção...
       thor   Ready    <none>          43s   v1.29.2
 
 
-      ### Resultado deve ser um service e deployment do jenkins, usado para testar nosso cluster
+      - Resultado deve ser um service e deployment do jenkins, usado para testar nosso cluster
       kubectl get all
 
       NAME                              | READY  | STATUS   | RESTARTS  | AGE
@@ -105,7 +105,7 @@ Em construção...
       replicaset.apps/jenkins-dp-6fb5fb8cc7    2         2         2       118s
 
 
-      ### Verificar em quais nodes os pods estão sendo executados
+      - Verificar em quais nodes os pods estão sendo executados
       kubectl get pods -o wide
 
       NAME                         | READY | STATUS   | RESTARTS | AGE   | IP	NODE      | NOMINATED NODE | READINESS | GATES
