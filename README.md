@@ -95,6 +95,11 @@ deployment.apps/jenkins-dp    2/2      2            2           118s
 
 NAME                                   | DESIRED | CURRENT | READY | AGE
 replicaset.apps/jenkins-dp-6fb5fb8cc7    2         2         2       118s
+
+### Verificar em quais nodes os pods estão sendo executados
+NAME                         | READY | STATUS   | RESTARTS | AGE   | IP	NODE      | NOMINATED NODE | READINESS | GATES
+jenkins-dp-6fb5fb8cc7-fggpw    1/1     Running    0          3m11s   10.244.192.2   thor             <none>      <none>
+jenkins-dp-6fb5fb8cc7-kqljt    1/1     Running    0          3m11s   10.244.192.1   thor             <none>      <none>
 ```
 
 
