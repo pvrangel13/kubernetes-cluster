@@ -1,4 +1,4 @@
-![Alt Text](./k8s.png alt="Alt Text" width="100")
+![Alt Text]("./k8s.png" alt="Alt Text" width="100")
 
 # kubernetes-cluster
 
