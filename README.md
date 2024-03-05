@@ -72,31 +72,50 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 9. **Verificando o Funcionamento:**
    - Após a conclusão do playbook, execute os comandos abaixo para verificar o funcionamento do Cluster Kubernetes:
    
-    kubectl get nodes # Listar os nodes atuamente no cluster
-    NAME   STATUS   ROLES           AGE   VERSION
-    odin   Ready    control-plane   69s   v1.29.2
-    thor   Ready    <none>          43s   v1.29.2
+|Description: Listar os nodes atuamente no cluster
+| Command                                                                    |
+|--------------------------|-------------------------------------------------|
+| `kubectl get nodes`                              |
+| NAME | STATUS | ROLES        | AGE     | VERSION |
+|------|--------|-------|------|---------|
+| odin | Ready | control-plane | 69s     | v1.29.2 |
+| thor | Ready | \<none>       | 43s     | v1.29.2 |
 
-    kubectl get all # Aqui devemos ter o resultado de um deployment e service rodando do jenkins
-    NAME                              READY   STATUS    RESTARTS   AGE
-    pod/jenkins-dp-6fb5fb8cc7-fggpw   1/1     Running   0          118s
-    pod/jenkins-dp-6fb5fb8cc7-kqljt   1/1     Running   0          118s
 
-    NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-    service/jenkins-svc   NodePort    10.103.35.113   <none>        8080:30005/TCP   117s
-    service/kubernetes    ClusterIP   10.96.0.1       <none>        443/TCP          2m27s
 
-    NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
-    deployment.apps/jenkins-dp   2/2     2            2           118s
+| Description: Deverá retornar um deployment e service jenkins já configurado no ansible para teste e tudo que está sendo executado
+| Command                                                             |
+|------------------------|--------------------------------------------|
+| `kubectl get all`                                                   |
+| NAME                            | READY | STATUS  | RESTARTS | AGE  |
+|---------------------------------|-------|---------|----------|------|
+| pod/jenkins-dp-6fb5fb8cc7-fggpw | 1/1   | Running | 0        | 118s |
+| pod/jenkins-dp-6fb5fb8cc7-kqljt | 1/1   | Running | 0        | 118s |
 
-    NAME                                    DESIRED   CURRENT   READY   AGE
-    replicaset.apps/jenkins-dp-6fb5fb8cc7   2         2         2       118s
+| NAME                | TYPE      | CLUSTER-IP    | EXTERNAL-IP | PORT(S)         | AGE  |
+|---------------------|-----------|---------------|-------------|-----------------|------|
+| service/jenkins-svc | NodePort  | 10.103.35.113 | \<none>     | 8080:30005/TCP  | 117s |
+| service/kubernetes  | ClusterIP | 10.96.0.1     | \<none>     | 443/TCP | 2m27s |
 
-    kubectl get pods -o wide # Aqui retornamos os pods e onde estão sendo executados, como só subi o lider e 01 operário, tenho dois pods rodando no thor
-    NAME                          READY   STATUS    RESTARTS   AGE     IP             NODE   NOMINATED NODE   READINESS GATES
-    jenkins-dp-6fb5fb8cc7-fggpw   1/1     Running   0          3m11s   10.244.192.2   thor   <none>           <none>
-    jenkins-dp-6fb5fb8cc7-kqljt   1/1     Running   0          3m11s   10.244.192.1   thor   <none>           <none>
-     ```
+| NAME                       | READY | UP-TO-DATE | AVAILABLE | AGE  |
+|----------------------------|-------|------------|-----------|------|
+| deployment.apps/jenkins-dp | 2/2   | 2          | 2         | 118s |
+
+| NAME                                  | DESIRED | CURRENT | READY | AGE  |
+|---------------------------------------|---------|---------|-------|------|
+| replicaset.apps/jenkins-dp-6fb5fb8cc7 | 2       | 2       | 2     | 118s |
+
+
+
+| Description: Verificar em quais nodes os pods estão sendo executados
+| Command                          |                                       |
+|----------------------------------|--------------------------------------------------|
+| `kubectl get pods -o wide`       |  |
+| NAME                        | READY | STATUS  | RESTARTS | AGE   | IP           | NODE | NOMINATED NODE | READINESS GATES |
+|-----------------------------|-------|---------|----------|-------|--------------|------|----------------|-----------------|
+| jenkins-dp-6fb5fb8cc7-fggpw | 1/1   | Running | 0        | 3m11s | 10.244.192.2 | thor | \<none>        | \<none>         |
+| jenkins-dp-6fb5fb8cc7-kqljt | 1/1   | Running | 0        | 3m11s | 10.244.192.1 | thor | \<none>        | \<none>         |
+
 
 10. **Limpeza dos Recursos:**
     - Para limpar o deployment e o service, execute:
@@ -106,14 +125,7 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
       ```
 
 11. **Conclusão:**
-    - Se tudo correu bem, seu ambiente Kubernetes está pronto para uso. Divirta-se explorando e experimentando!
-
-
-11 - Limpe o deployment e o service.
-    kubectl delete deployment.apps/jenkins-dp
-    kubectl delete service/jenkins-svc
-12 - Divirta-se
-    
+    - Se tudo correu bem, seu ambiente Kubernetes está pronto para uso. Divirta-se explorando e experimentando! 
 
 
 Em construção...
