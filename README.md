@@ -18,7 +18,7 @@ No arquivo Vagrantfile, configuramos três máquinas distintas: odin (Líder), t
 [Documentação Oficial Instalação Kubernetes](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 
 ## Explicação arquivos
-
+Em construção...
 
 ## Uso
 
@@ -118,5 +118,3 @@ jenkins-dp-6fb5fb8cc7-kqljt    1/1     Running    0          3m11s   10.244.192.
 11. **Conclusão:**
     - Se tudo correu bem, seu ambiente Kubernetes está pronto para uso. Divirta-se explorando e experimentando! 
 
-
-Em construção...
