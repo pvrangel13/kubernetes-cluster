@@ -72,7 +72,7 @@ Em construção...
 8. **Execução do Playbook Ansible:**
    - Execute o playbook Ansible:
      ```bash
-     devops@odin:/home/vagrant$ ansible-playbook -i /k8s/inventory.ini /k8s/kubernetes_playbook.yaml
+     ansible-playbook -i /k8s/inventory.ini /k8s/kubernetes_playbook.yaml
      ```
 
 9. **Verificando o Funcionamento:**
